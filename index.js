@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 1000
 
@@ -38,6 +38,13 @@ async function run() {
             const result = await campaignCollection.find().toArray();
             res.send(result);
         });
+        app.get('/campaign/:id', async (req, res) => {
+            const id = req.params.id;
+            const quary = { _id: new ObjectId(id) }
+
+            const result = await campaignCollection.findOne(quary)
+            res.send(result)
+        })
 
         app.post('/campaigns', async (req, res) => {
             const campaignInfo = req.body;
